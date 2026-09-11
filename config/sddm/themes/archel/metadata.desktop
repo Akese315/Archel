@@ -1,0 +1,11 @@
+[SddmGreeterTheme]
+Name=Archel
+Description=Hyprlock-inspired SDDM theme
+Author=Archel
+Copyright=2026
+License=GPL-3.0+
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
