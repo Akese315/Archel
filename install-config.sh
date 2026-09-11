@@ -2,7 +2,7 @@
 
 set -e
 
-ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "==> Installation de la configuration Archel..."
 
