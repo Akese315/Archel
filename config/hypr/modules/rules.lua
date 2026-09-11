@@ -1,0 +1,13 @@
+-- Window rules and workspace rules
+-- Example:
+-- hl.window_rule({
+--     match = { class = "firefox" },
+--     float = false,
+-- })
+--
+-- hl.workspace_rule({
+--     workspace = "1",
+--     gaps_out = 10,
+-- })
+
+-- Keep file intentionally empty for now.
