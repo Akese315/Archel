@@ -2,50 +2,53 @@
 
 set -e
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "==> Installation de la configuration Archel..."
 
-# ─────────────────────────────────────────────
-# Hyprland
-# ─────────────────────────────────────────────
+# ============================================================
+# HYPRLAND
+# ============================================================
 
 echo "→ Installation de la configuration Hyprland..."
 
-mkdir -p "$SCRIPT_DIR/airootfs/etc/skel/.config"
+mkdir -p "$ROOT/airootfs/etc/skel/.config"
 
-rm -rf "$SCRIPT_DIR/airootfs/etc/skel/.config/hypr"
+rm -rf "$ROOT/airootfs/etc/skel/.config/hypr"
 
-cp -r "$SCRIPT_DIR/config/hypr" \
-      "$SCRIPT_DIR/airootfs/etc/skel/.config/hypr"
+cp -r "$ROOT/config/hypr" \
+      "$ROOT/airootfs/etc/skel/.config/hypr"
 
 
-# ─────────────────────────────────────────────
-# SDDM
-# ─────────────────────────────────────────────
+# ============================================================
+# SDDM - THEME
+# ============================================================
 
 echo "→ Installation du thème SDDM..."
 
-mkdir -p "$SCRIPT_DIR/airootfs/usr/share/sddm/themes"
+mkdir -p "$ROOT/airootfs/usr/share/sddm/themes"
 
-rm -rf "$SCRIPT_DIR/airootfs/usr/share/sddm/themes/archel"
+rm -rf "$ROOT/airootfs/usr/share/sddm/themes/archel"
 
-cp -r "$SCRIPT_DIR/config/sddm/archel" \
-      "$SCRIPT_DIR/airootfs/usr/share/sddm/themes/archel"
+cp -r "$ROOT/config/sddm/themes/archel" \
+      "$ROOT/airootfs/usr/share/sddm/themes/archel"
 
 
-# Configuration SDDM
-if [ -f "$SCRIPT_DIR/config/sddm/archel.conf" ]; then
+# ============================================================
+# SDDM - CONFIGURATION
+# ============================================================
+
+if [ -d "$ROOT/config/sddm/sddm.conf.d" ]; then
 
     echo "→ Installation de la configuration SDDM..."
 
-    mkdir -p "$SCRIPT_DIR/airootfs/etc/sddm.conf.d"
+    mkdir -p "$ROOT/airootfs/etc/sddm.conf.d"
 
-    cp "$SCRIPT_DIR/config/sddm/archel.conf" \
-       "$SCRIPT_DIR/airootfs/etc/sddm.conf.d/archel.conf"
+    cp -r "$ROOT/config/sddm/sddm.conf.d/." \
+          "$ROOT/airootfs/etc/sddm.conf.d/"
 
 fi
 
 
 echo
-echo "✓ Configuration Archel installée."
+echo "✓ Configuration Archel installée avec succès."
