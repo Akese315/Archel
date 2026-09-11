@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
-ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "==> Installation de la configuration Archel..."
 
@@ -16,8 +16,7 @@ mkdir -p "$ROOT/airootfs/etc/skel/.config"
 
 rm -rf "$ROOT/airootfs/etc/skel/.config/hypr"
 
-cp -r "$ROOT/config/hypr" \
-      "$ROOT/airootfs/etc/skel/.config/hypr"
+cp -a "$ROOT/config/hypr" "$ROOT/airootfs/etc/skel/.config/"
 
 
 # ============================================================
@@ -30,8 +29,7 @@ mkdir -p "$ROOT/airootfs/usr/share/sddm/themes"
 
 rm -rf "$ROOT/airootfs/usr/share/sddm/themes/archel"
 
-cp -r "$ROOT/config/sddm/themes/archel" \
-      "$ROOT/airootfs/usr/share/sddm/themes/archel"
+cp -a "$ROOT/config/sddm/themes/archel" "$ROOT/airootfs/usr/share/sddm/themes/"
 
 
 # ============================================================
@@ -44,8 +42,7 @@ if [ -d "$ROOT/config/sddm/sddm.conf.d" ]; then
 
     mkdir -p "$ROOT/airootfs/etc/sddm.conf.d"
 
-    cp -r "$ROOT/config/sddm/sddm.conf.d/." \
-          "$ROOT/airootfs/etc/sddm.conf.d/"
+    cp -a "$ROOT/config/sddm/sddm.conf.d/." "$ROOT/airootfs/etc/sddm.conf.d/"
 
 fi
 
