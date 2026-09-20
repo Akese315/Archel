@@ -61,6 +61,7 @@ rsync -aAXH --info=progress2 \
     --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/run/*" \
     --exclude="/tmp/*" --exclude="/mnt/*" --exclude="/mnt" --exclude="/etc/fstab" \
     --exclude="/boot/efi/*" \
+    --exclude="/root/.zsh_history" --exclude="/home/*/.zsh_history" \
     / /mnt || rc=$?
 if [ "$rc" -eq 24 ]; then
     warn "Certains fichiers ont disparu pendant la copie (code 24), sans gravité."
@@ -100,7 +101,30 @@ arch-chroot /mnt systemctl set-default graphical.target
 ok "Services activés"
 
 # --- 5. Initramfs ----------------------------------------------------------
-step 5 "Génération des initramfs (mkinitcpio -P)"
+step 5 "Installation du noyau et génération des initramfs (mkinitcpio -P)"
+# Sur le live, le noyau n'est pas dans /boot du système : archiso le place sur le média (bootmnt).
+if [ ! -f /mnt/boot/vmlinuz-linux ]; then
+    KERNEL_SRC=""
+    # 1) Le paquet linux fournit toujours /usr/lib/modules/<version>/vmlinuz (déjà copié par rsync)
+    for d in /mnt/usr/lib/modules/*/; do
+        if [ -f "${d}vmlinuz" ] && [ "$(cat "${d}pkgbase" 2>/dev/null)" = "linux" ]; then
+            KERNEL_SRC="${d}vmlinuz"
+            break
+        fi
+    done
+    # 2) Sinon, le média live (absent si copytoram, Ventoy, etc.)
+    if [ -z "$KERNEL_SRC" ]; then
+        KERNEL_SRC="$(find /run/archiso/bootmnt -name vmlinuz-linux 2>/dev/null | head -n1)"
+    fi
+    if [ -z "$KERNEL_SRC" ]; then
+        echo "${RED}✘ Noyau introuvable (ni dans /usr/lib/modules, ni sur /run/archiso/bootmnt).${RESET}"
+        echo "${RED}  Solution : arch-chroot /mnt pacman -Sy linux (nécessite le réseau).${RESET}"
+        exit 1
+    fi
+    info "Copie du noyau depuis $KERNEL_SRC"
+    install -Dm644 "$KERNEL_SRC" /mnt/boot/vmlinuz-linux
+fi
+ok "Noyau présent : /boot/vmlinuz-linux"
 arch-chroot /mnt mkinitcpio -P
 [ -f /mnt/boot/initramfs-linux.img ] || { echo "${RED}✘ /boot/initramfs-linux.img est absent.${RESET}"; exit 1; }
 ok "initramfs générés"
