@@ -1,4 +1,5 @@
 [SddmGreeterTheme]
+QtVersion=6
 Name=Archel
 Description=Hyprlock-inspired SDDM theme
 Author=Archel
