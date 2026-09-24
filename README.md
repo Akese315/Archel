@@ -89,10 +89,17 @@ sont montés. Il :
 2. génère `/mnt/etc/fstab` ;
 3. remplace le preset `mkinitcpio` Archiso ;
 4. active SDDM et NetworkManager ;
-5. installe le noyau et génère les initramfs ;
+5. copie le noyau depuis `/mnt/usr/lib/modules/*/vmlinuz` vers
+  `/mnt/boot/vmlinuz-linux`, puis génère les initramfs ;
 6. installe GRUB en mode UEFI ;
 7. active la détection des systèmes Windows avec `os-prober` ;
 8. génère la configuration GRUB.
+
+Si la copie doit être faite manuellement avant l’exécution de `mkinitcpio` :
+
+```bash
+cp /mnt/usr/lib/modules/*/vmlinuz /mnt/boot/vmlinuz-linux
+```
 
 Un journal complet est écrit dans `/var/log/install.log`. Une fois l’installation
 terminée :
